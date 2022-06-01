@@ -1,0 +1,117 @@
+
+// Constants
+{{~it.constant_rate:c}}static const float {{=c.left}} = {{=c.right}};
+{{~}}
+
+// {{=it.class_name}}
+
+class mydsp : public dsp {
+
+    private:
+        
+        float fs;
+        {{~it.control_inputs:c}}
+        FAUSTFLOAT {{=c}};
+        FAUSTFLOAT {{=c}}_z1;
+        char {{=c}}_CHANGED;
+        {{~}}
+
+        {{~it.declarations:d}}
+        float {{=d.left}};{{~}}
+     
+    public:
+
+        int getNumInputs() { return {{=it.audio_inputs.length}}; }
+        int getNumOutputs() { return {{=it.outputs.length}}; }
+
+        void buildUserInterface(UI* ui_interface)
+        {
+            const char* names[] = { {{=it.control_inputs.map(c => '\"' +c+'\"')}} };
+            ui_interface->openVerticalBox("zampogna"); {{~it.control_inputs:c}}
+            ui_interface->addHorizontalSlider(names[{{=it.control_inputs.indexOf(c)}}], &{{=c}}, 0.f, 0.f, 1.f, 0.01f); {{~}}
+            ui_interface->closeBox();
+        }
+
+        int getSampleRate() { return fs; };
+        
+        static void classInit(int sample_rate) {}
+
+        void init(int sample_rate)
+        {
+            classInit(sample_rate);
+            instanceInit(sample_rate);
+        }
+
+        void instanceInit(int sample_rate)
+        {
+            instanceConstants(sample_rate);
+            instanceResetUserInterface();
+            instanceClear();
+        }
+
+        void instanceConstants(int sample_rate)
+        {
+            // First run
+            {{~it.reset1:r}}
+            {{?r.is_used_locally}}static const float {{?}}{{=r.left}} = {{=r.right}};{{~}}
+            {{~it.reset2:r}}
+            {{?r.is_used_locally}}static const float {{?}}{{=r.left}} = {{=r.right}};{{~}}
+            fs = sample_rate;
+        }
+
+        void instanceResetUserInterface()
+        {
+            {{~it.control_inputs:c}}
+            {{=c}} = 0.f;{{~}}
+        }
+
+        void instanceClear() {}
+
+        dsp* clone()
+        {
+            // return new {{=it.class_name}}();
+            return new mydsp();
+        }
+
+        void metadata(Meta* m) {}
+
+        void compute(int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs)
+        {
+            compute(count, {{=it.audio_inputs.map(i => 'inputs['+it.audio_inputs.indexOf(i)+']')}}, {{=it.outputs.map(i => 'outputs['+it.outputs.indexOf(i)+']')}});
+        }
+        
+        void compute(double date_usec, int count, FAUSTFLOAT** inputs, FAUSTFLOAT** outputs)
+        {
+            compute(count, inputs, outputs);
+        }
+        
+        void compute(int count, {{=it.audio_inputs.concat(it.outputs).map(x => 'FAUSTFLOAT* ' + x).join(', ')}})
+        {
+            // Control update
+            {{~it.control_inputs:c}}
+            {{=c}}_CHANGED = {{=c}} != {{=c}}_z1;{{~}}
+            
+            // Control rate
+            {{~it.controls_rate:c}}
+            if ({{=Array.from(c.set).map(e => e + "_CHANGED").join(' | ')}}) {{{~c.stmts: s}}
+                {{?s.is_used_locally}}static const float {{?}}{{=s.left}} = {{=s.right}};{{~}}
+            }{{~}}
+            {{~it.control_inputs:c}}
+            {{=c}}_CHANGED = 0;{{~}}
+            
+            // Sample loop
+            for (int i = 0; i < count; i++) {
+                {{~it.audio_rate: a}}
+                {{?a.is_used_locally}}const float {{?}}{{=a.left}} = {{=a.right}};{{~}}
+                
+                {{~it.delay_updates:u}}{{=u.left}} = {{=u.right}};
+                {{~}}
+                {{~it.output_updates:u}}
+                {{=u.left}}[i] = {{=u.right}};{{~}}
+            }
+            
+            {{~it.control_inputs:c}}
+            {{=c}}_z1 = {{=c}};{{~}}
+        }
+
+};
