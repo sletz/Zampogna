@@ -110,7 +110,8 @@ class mydsp : public dsp {
                 {{=u.left}}[i] = {{=u.right}};{{~}}
             }
             // Keep control
-            {{~it.control_inputs:c}}{{=c}}_z1 = {{=c}};{{~}}
+            {{~it.control_inputs:c}}{{=c}}_z1 = {{=c}};
+            {{~}}
         }
 
 };
