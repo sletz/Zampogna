@@ -29,7 +29,7 @@
                 "doT": require("dot"),
                 "templates": {
                     "matlab": String(fs.readFileSync(path.join(__dirname, "templates", "matlab_template.txt"))),
-                    "faust": String(fs.readFileSync(path.join(path.dirname(process.argv[1]), "templates", "faust_template.txt"))),
+                    "faust": String(fs.readFileSync(path.join(__dirname, "templates", "faust_template.txt"))),
                     "vst2_main_h": String(fs.readFileSync(path.join(__dirname, "templates", "vst2_program_h_template.txt"))),
                     "vst2_main_cpp": String(fs.readFileSync(path.join(__dirname, "templates", "vst2_program_c_template.txt"))),
                     "vst2_effect_h": String(fs.readFileSync(path.join(__dirname, "templates", "vst2_effect_h_template.txt"))),

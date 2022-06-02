@@ -39,7 +39,7 @@ void Effect::setParameter(VstInt32 index, float value) {
 	switch (index) {
 	
 	case 0:
-		instance.setcutoff_1(value);
+		instance.setcutoff(value);
 		break;
 	}
 }
@@ -49,14 +49,14 @@ float Effect::getParameter(VstInt32 index) {
 	switch (index) {
 	
 	case 0:
-		v = instance.getcutoff_1();
+		v = instance.getcutoff();
 		break;
 	}
 	return v;
 }
 
 void Effect::getParameterName(VstInt32 index, char *text) {
-	const char *names[] = { "cutoff_1"};
+	const char *names[] = { "cutoff"};
 	strcpy(text, names[index]);
 }
 
