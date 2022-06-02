@@ -10,12 +10,13 @@ class mydsp : public dsp {
     
         // Sample rate
         float fs;
+        // Fields {{~it.declarations1:d}}
+        float {{=d.left}};{{~}}
+        {{~it.declarations2:d}}
+        float {{=d.left}} = {{=d.right}};{{~}}
         // Controller definition {{~it.control_inputs:c}}
-        FAUSTFLOAT {{=c}};
         FAUSTFLOAT {{=c}}_z1;
         char {{=c}}_CHANGED; {{~}}
-        // Fields {{~it.declarations:d}}
-        float {{=d.left}};{{~}}
      
     public:
 
