@@ -102,7 +102,7 @@
                     return
                 case 'VAR_IN':
                     if (update_rate == 3) {
-                        if (target_lang == 'cpp')
+                        if ((target_lang == 'cpp') || (target_lang == 'faust'))
                             code.add(block.label, "[i]")
                         else if (target_lang == 'MATLAB')
                             code.add(block.label, "(i)")
@@ -121,7 +121,7 @@
                     code.add(id)
                     return
                 case 'NUMBER':
-                    if (target_lang == 'cpp')
+                    if ((target_lang == 'cpp') || (target_lang == 'faust'))
                         code.add(block.val + ((block.val.toString().includes('.') || block.val.toString().toLowerCase().includes('e')) ? 'f' : '.f'));
                     else if (target_lang == 'MATLAB')
                         code.add(block.val)
@@ -194,7 +194,7 @@
                     code.add(input_blocks_code[0])
                     return
                 case 'NUMBER':
-                    if (target_lang == 'cpp')
+                    if ((target_lang == 'cpp') || (target_lang == 'faust'))
                         code.add(block.val + ((block.val.toString().includes('.') || block.val.toString().toLowerCase().includes('e')) ? 'f' : '.f'));
                     else if (target_lang == 'MATLAB')
                         code.add(block.val)

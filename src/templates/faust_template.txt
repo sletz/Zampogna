@@ -101,11 +101,13 @@ class mydsp : public dsp {
             
             // Sample loop
             for (int i = 0; i < count; i++) {
+                // audio rate
                 {{~it.audio_rate: a}}
                 {{?a.is_used_locally}}const float {{?}}{{=a.left}} = {{=a.right}};{{~}}
-                
+                // delay updates
                 {{~it.delay_updates:u}}{{=u.left}} = {{=u.right}};
                 {{~}}
+                // output
                 {{~it.output_updates:u}}
                 {{=u.left}}[i] = {{=u.right}};{{~}}
             }
